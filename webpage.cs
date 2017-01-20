@@ -16,35 +16,34 @@ public partial class Product : System.Web.UI.Page
     if (this.IsValid)
     {
       var product = this.GetShippingProduct();
+      IShipper shipper = null;
       if (product.Shipper == 1)
       {
         this.lblCompany.Text = "黑貓";
         // 選擇黑貓計算運費
 
-        var blackcat = new Blackcat();
-        blackcat.CalculateFee(product);
+        shipper = new Blackcat();
       }
       else if (product.Shipper == 2)
       {
         this.lblCompany.Text = "新竹貨運";
         // 選擇新竹貨運計算運費
 
-        var hsinchu = new Hsinchu();
-        hsinchu.CalculateFee(product);
+        shipper = new Hsinchu();
       }
       else if (product.Shipper == 3)
       {
         this.lblCompany.Text = "郵局";
         // 選擇郵局計算運費
 
-        var postoffice = new Postoffice();
-        postoffice.CalculateFee(product);
+        shipper = new Postoffice();
       }
       else
       {
           var js = "alert('發生不預期錯誤，請洽系統管理者');location.href='http://tw.yahoo.com/';";
           this.ClientScript.RegisterStartupScript(this.GetType(), "back", js, true);
       }
+      shipper.CalculateFee(product);
       this.lblCharge.Text = product.ShippingFee.ToString();
     }
   }

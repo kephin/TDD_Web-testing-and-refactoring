@@ -2,7 +2,7 @@ using System;
 
 namespace LogisticLib
 {
-  public class Hsinchu
+  public class Hsinchu : IShipper
   {
     public Hsinchu()
     {

@@ -2,7 +2,7 @@ using System;
 
 namespace LogisticLib
 {
-  public class Postoffice
+  public class Postoffice : IShipper
   {
     public Postoffice()
     {

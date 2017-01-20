@@ -2,7 +2,7 @@ using System;
 
 namespace LogisticLib
 {
-  public class Blackcat
+  public class Blackcat : IShipper
   {
     public Blackcat()
     {
