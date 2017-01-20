@@ -8,6 +8,14 @@ namespace LogisticLib
     {
     }
 
+    public string Name
+    {
+      get
+      {
+        return "郵局";
+      }
+    }
+
     public void CalculateFee(ShippingProduct product)
     {
       var feeByWeight = 80 + product.Weight * 10;

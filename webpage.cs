@@ -16,36 +16,43 @@ public partial class Product : System.Web.UI.Page
     if (this.IsValid)
     {
       var product = this.GetShippingProduct();
-      IShipper shipper = null;
-      if (product.Shipper == 1)
-      {
-        this.lblCompany.Text = "黑貓";
-        // 選擇黑貓計算運費
+      IShipper shipper = GetShipper(product.Shipper);
 
-        shipper = new Blackcat();
-      }
-      else if (product.Shipper == 2)
+      if (shipper != null)
       {
-        this.lblCompany.Text = "新竹貨運";
-        // 選擇新竹貨運計算運費
-
-        shipper = new Hsinchu();
-      }
-      else if (product.Shipper == 3)
-      {
-        this.lblCompany.Text = "郵局";
-        // 選擇郵局計算運費
-
-        shipper = new Postoffice();
+        this.lblCompany.Text = shipper.Name;
+        shipper.CalculateFee(product);
+        this.lblCharge.Text = product.ShippingFee.ToString();
       }
       else
       {
-          var js = "alert('發生不預期錯誤，請洽系統管理者');location.href='http://tw.yahoo.com/';";
-          this.ClientScript.RegisterStartupScript(this.GetType(), "back", js, true);
+        var js = "alert('發生不預期錯誤，請洽系統管理者');location.href='http://tw.yahoo.com/';";
+        this.ClientScript.RegisterStartupScript(this.GetType(), "back", js, true);
       }
-      shipper.CalculateFee(product);
-      this.lblCharge.Text = product.ShippingFee.ToString();
     }
+  }
+
+  private IShipper GetShipper(int shipper)
+  {
+    IShipper result = null;
+    switch (shipper)
+    {
+      case 1:
+        result = new Blackcat();
+        break;
+
+      case 2:
+        result = new Hsinchu();
+        break;
+
+      case 3:
+        result = new Postoffice();
+        break;
+
+      default:
+        break;
+    }
+    return result;
   }
 
   private ShippingProduct GetShippingProduct()
