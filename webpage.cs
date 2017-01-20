@@ -21,21 +21,24 @@ public partial class Product : System.Web.UI.Page
         this.lblCompany.Text = "黑貓";
         // 選擇黑貓計算運費
 
-        CalculateFeeByBlackcat(product);
+        var blackcat = new Blackcat();
+        blackcat.CalculateFee(product);
       }
       else if (product.Shipper == 2)
       {
         this.lblCompany.Text = "新竹貨運";
         // 選擇新竹貨運計算運費
 
-        CalculateFeeByHsinchu(product);
+        var hsinchu = new Hsinchu();
+        hsinchu.CalculateFee(product);
       }
       else if (product.Shipper == 3)
       {
         this.lblCompany.Text = "郵局";
         // 選擇郵局計算運費
 
-        CalculateFeeByPostoffice(product);
+        var postoffice = new Postoffice();
+        postoffice.CalculateFee(product);
       }
       else
       {
@@ -43,50 +46,6 @@ public partial class Product : System.Web.UI.Page
           this.ClientScript.RegisterStartupScript(this.GetType(), "back", js, true);
       }
       this.lblCharge.Text = product.ShippingFee.ToString();
-    }
-  }
-
-  private static void CalculateFeeByPostoffice(ShippingProduct product)
-  {
-    var feeByWeight = 80 + product.Weight * 10;
-    var size = product.Size.Length * product.Size.Width * product.Size.Height;
-    var feeBySize = size * 0.0000353 * 1100;
-
-    if (feeByWeight < feeBySize)
-    {
-      product.ShippingFee = feeByWeight;
-    }
-    else
-    {
-      product.ShippingFee = feeBySize;
-    }
-  }
-
-  private static void CalculateFeeByHsinchu(ShippingProduct product)
-  {
-    var size = product.Size.Length * product.Size.Width * product.Size.Height;
-    //長 x 寬 x 高（公分）x 0.0000353
-    if (product.Size.Length > 100 || product.Size.Width > 100 || product.Size.Height > 100)
-    {
-      product.ShippingFee = size * 0.0000353 * 1100 + 500;
-    }
-    else
-    {
-      product.ShippingFee = size * 0.0000353 * 1200;
-    }
-  }
-
-  private static void CalculateFeeByBlackcat(ShippingProduct product)
-  {
-    var weight = product.Weight;
-    if (weight > 20)
-    {
-      product.ShippingFee = 500;
-    }
-    else
-    {
-        var fee = 100 + weight * 10;
-      product.ShippingFee = fee;
     }
   }
 
@@ -106,20 +65,4 @@ public partial class Product : System.Web.UI.Page
     };
     return result;
   }
-}
-
-public class ShippingProduct
-{
-  public string Name { get; set; }
-  public double Weight { get; set; }
-  public Size Size { get; set; }
-  public int Shipper { get; set; }
-  public double ShippingFee { get; set; }
-}
-
-public struct Size
-{
-  public double Length { get; set; }
-  public double Width { get; set; }
-  public double Height { get; set; }
 }
